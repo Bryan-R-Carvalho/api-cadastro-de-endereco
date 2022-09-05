@@ -36,12 +36,14 @@ class BairroController extends Controller
     }
     public function store(Request $request)
     {
-        $bairro = $this->bairro->create($request->all());
-        try {
-            $bairro->save();
-            return response()->json(['message' => 'Bairro cadastrado com sucesso!'], 201);
-        } catch (\Throwable $th) {
-            return response()->json(['message' => 'Não foi possível cadastrar o bairro.', 'status' => '500'], 500);
+        try{
+            if($this->bairro::where('nome', $request->nome)->exists()){
+                return response()->json(['mensagem' => 'Este bairro ja existe', 'status' => '400'], 400);
+            }
+            $this->bairro::create($request->all());
+            return response()->json(['mensagem' => 'Bairro cadastrado com sucesso!'], 201);
+        }catch(\Exception $e){
+            return response()->json(['mensagem' => 'Erro ao cadastrar bairro','status' => '500'], 500);
         }
     }
     public function update(Request $request, int $bairro)

@@ -39,17 +39,27 @@ class UfController extends Controller
 
     public function store(UfRequest $request)
     {
-        return response()->json(['mensagem' => 'UF cadastrado com sucesso!'], 201);
+        try{
+            if($this->model::where('sigla_uf', $request->sigla_uf)->exists()){
+                return response()->json(['mensagem' => 'Esta UF ja existe', 'status' => '400'], 400);
+            }
         
+        $this->model::create($request->all());
+        return response()->json(['mensagem' => 'UF cadastrada com sucesso!'], 201);
+
+        }catch(\Exception $e){
+            return response()->json(['mensagem' => 'Erro ao cadastrar UF','status' => '500'], 500);
+        }
     }
+
     public function update(int $uf, Request $request)
     {
         $data = Uf::find($uf);
         if($data === null){
-            return response()->json(['message' => 'Nao existe este UF'], 404);
+            return response()->json(['mensagem' => 'Nao existe este UF'], 404);
         }else{
             $data->update($request->all());
-            return response()->json(['message' => 'UF atualizado com sucesso!'], 200);
+            return response()->json(['mensagem' => 'UF atualizado com sucesso!'], 200);
         }
 
         

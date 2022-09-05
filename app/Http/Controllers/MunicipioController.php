@@ -39,12 +39,15 @@ class MunicipioController extends Controller
 
     public function store(Request $request)
     {
-        $municipio = $this->municipio->create($request->all());
-        try {
-            $municipio->save();
-            return response()->json(['message' => 'Município cadastrado com sucesso!'], 201);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Não foi possível cadastrar o município.'], 500);
+        try{
+            if($this->model::where('nome', $request->nome)->exists()){
+                return response()->json(['mensagem' => 'Este municipio ja existe', 'status' => '400'], 400);
+            }
+        
+        $this->model::create($request->all());
+        return response()->json(['mensagem' => 'Municipio cadastrado com sucesso!'], 201);
+        }catch(\Exception $e){
+            return response()->json(['mensagem' => 'Erro ao cadastrar municipio','status' => '500'], 500);
         }
     }
 

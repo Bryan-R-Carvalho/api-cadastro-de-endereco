@@ -16,16 +16,9 @@ class UfRequest extends FormRequest
     public function rules()
     {
         return [
-            'sigla_uf' => [
-                'required',
-                Rule::unique('tb_uf')->ignore($this->uf),
-                'max:3',
-            ],
-            'nome' => [
-                'required',
-                'max:60',
-            ],
-
+            'sigla_uf' => 'required|max:2',
+            'nome' => 'required|max:50',
+            'status' => 'required'
         ];
     }
     public function messages()
@@ -36,10 +29,8 @@ class UfRequest extends FormRequest
             'sigla_uf.max' => 'A sigla da UF deve ter no máximo 3 caracteres!',
             'sigla_uf.unique' => 'A sigla da UF já existe!',
             'nome.required' => 'O nome da UF é obrigatório!',
-            'nome.string' => 'O nome da UF deve ser uma string!',
             'nome.max' => 'O nome da UF deve ter no máximo 60 caracteres!',
             'nome.unique' => 'O nome da UF já existe!',
         ];
     }
-    
 }
